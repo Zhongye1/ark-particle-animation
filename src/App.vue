@@ -5,7 +5,7 @@ import DynamicLogo from "./components/DynamicLogo.vue";
 <template>
   <div class="app-container">
     <!-- 传入具体图片路径 -->
-    <DynamicLogo logo-src="https://pica.zhimg.com/v2-164f0c352e3898a34f68dac4c11c9304_1440w.jpg" />
+    <DynamicLogo logo-src="src\assets\logo_rhine.png" />
   </div>
 </template>
 
@@ -16,6 +16,6 @@ import DynamicLogo from "./components/DynamicLogo.vue";
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #b3b3b3;
+  background-color: #000000;
 }
 </style>

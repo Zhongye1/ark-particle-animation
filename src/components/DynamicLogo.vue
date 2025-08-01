@@ -13,10 +13,10 @@ const canvas = ref<HTMLCanvasElement | null>(null);
 const width = 400, height = 400;
 
 // 粒子动画配置
-const animateTime = 30;
+const animateTime = 50;
 const opacityStep = 1 / animateTime;
-const Radius = 40;
-const Inten = 0.95;
+const Radius = 120;
+const Inten = 2.8;
 
 /** 粒子类 */
 class Particle {
@@ -65,15 +65,18 @@ class Particle {
       const distance = Math.sqrt(dx **2 + dy** 2);
       
 
-      if (distance < Radius && distance > 0) {
-        const disPercent = Radius / distance;
-        const angle = Math.atan2(dy, dx);
-        const cos = Math.cos(angle);
-        const sin = Math.sin(angle);
-        const repX = cos * disPercent * -Inten;
-        const repY = sin * disPercent * -Inten;
-        this.vx += repX;
-        this.vy += repY;
+      // 修改作用范围判断和衰减逻辑
+    if (distance < Radius && distance > 0) {
+      // 添加距离衰减因子 (1 - distance/Radius)，使效果随距离自然递减
+      const distanceFactor = (1 - distance / Radius);
+      const angle = Math.atan2(dy, dx);
+      const cos = Math.cos(angle);
+      const sin = Math.sin(angle);
+      // 结合基础强度和距离衰减因子
+      const repX = cos * distanceFactor * -Inten;
+      const repY = sin * distanceFactor * -Inten;
+      this.vx += repX;
+      this.vy += repY;
       }
     }
 
@@ -139,8 +142,14 @@ class LogoImg {
         const a = imgData[index + 3];
 
         // 筛选非透明像素
+        // 筛选非透明像素
         if (a > 100) {
-          this.particleData.push(new Particle(x, y, animateTime, [r, g, b, a / 255]));
+          // 增加亮度调整系数 (1.0为原始亮度，值越大越亮)
+          const brightnessFactor = 1.5;
+          const r = Math.min(imgData[index] * brightnessFactor, 255);
+          const g = Math.min(imgData[index + 1] * brightnessFactor, 255);
+          const b = Math.min(imgData[index + 2] * brightnessFactor, 255);
+          this.particleData.push(new Particle(x, y, animateTime, [r, g, b, a]));
         }
       }
     }
